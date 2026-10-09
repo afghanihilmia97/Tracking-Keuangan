@@ -1,0 +1,7 @@
+{
+  "name": "financetrack-billing", "private": true, "type": "module",
+  "engines": {"node": "22"},
+  "main": "index.js",
+  "scripts": {"test": "node billing.test.js"},
+  "dependencies": {"firebase-admin": "^13.0.0", "firebase-functions": "^6.0.0", "google-auth-library": "^10.0.0"}
+}

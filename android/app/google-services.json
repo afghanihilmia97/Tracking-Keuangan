@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "394635815343",
+    "project_id": "financetrack-d8239",
+    "storage_bucket": "financetrack-d8239.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394635815343:android:8e9d5a6203d7fbadaa675a",
+        "android_client_info": {
+          "package_name": "com.financetrack.harian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394635815343-3p4hahsgmrc85qtk6ceotbu921cgsgdh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.financetrack.harian",
+            "certificate_hash": "e114cc9ab6c77dee4f57a118cfe2be1f9b08e86d"
+          }
+        },
+        {
+          "client_id": "394635815343-tut0rq5ch6slc5fj4cuvtf5759ghrjmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDge-ysibx5SWiWzY9mgHap_x8Y7Xj1YrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394635815343-tut0rq5ch6slc5fj4cuvtf5759ghrjmi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

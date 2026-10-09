@@ -1,0 +1,50 @@
+name: FinanceTrack signed Android bundle
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - run: npm ci --no-audit --no-fund
+      - run: node functions/billing.test.js
+      - run: npx tsc --noEmit
+      - run: npm run android:sync
+      - name: Decode upload keystore and build signed bundle
+        env:
+          UPLOAD_KEYSTORE_BASE64: ${{ secrets.UPLOAD_KEYSTORE_BASE64 }}
+          FINANCETRACK_KEY_ALIAS: ${{ secrets.UPLOAD_KEY_ALIAS }}
+          FINANCETRACK_STORE_PASSWORD: ${{ secrets.UPLOAD_STORE_PASSWORD }}
+          FINANCETRACK_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$UPLOAD_KEYSTORE_BASE64"
+          test -n "$FINANCETRACK_KEY_ALIAS"
+          test -n "$FINANCETRACK_STORE_PASSWORD"
+          test -n "$FINANCETRACK_KEY_PASSWORD"
+          export FINANCETRACK_KEYSTORE_FILE="$RUNNER_TEMP/financetrack-upload.jks"
+          trap 'python3 -c "import os; os.unlink(os.environ[\"FINANCETRACK_KEYSTORE_FILE\"])"' EXIT
+          printf '%s' "$UPLOAD_KEYSTORE_BASE64" | base64 --decode > "$FINANCETRACK_KEYSTORE_FILE"
+          chmod 600 "$FINANCETRACK_KEYSTORE_FILE"
+          cd android
+          bash gradlew bundleRelease --no-daemon
+          jarsigner -verify app/build/outputs/bundle/release/app-release.aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FinanceTrack-signed-AAB
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isUser(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read, delete: if isUser(userId);
+    }
+
+    match /users/{userId}/finance/{documentId} {
+      function isOwner() {
+        return isUser(userId);
+      }
+
+      allow read, delete: if isOwner() && documentId == "current";
+      allow create, update: if isOwner()
+                            && documentId == "current"
+                            && request.resource.data.keys().hasOnly([
+                              "data", "updatedAt", "clientUpdatedAt", "schemaVersion"
+                            ])
+                            && request.resource.data.data is map
+                            && request.resource.data.updatedAt is timestamp
+                            && request.resource.data.clientUpdatedAt is int
+                            && request.resource.data.schemaVersion == 1;
+    }
+
+    // Koleksi milik pengguna yang digunakan untuk sinkronisasi dan keluarga.
+    // Hanya pemilik UID yang dapat membaca atau menghapusnya.
+    match /users/{userId}/{document=**} {
+      allow read, delete: if isUser(userId);
+    }
+
+    // Saat akun dihapus, pengguna hanya boleh menghapus keanggotaannya sendiri.
+    match /families/{familyId}/members/{memberId} {
+      allow delete: if request.auth != null && request.auth.uid == memberId;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#3f31bf"/>
+      <stop offset="1" stop-color="#7b6df8"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ffffff" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="500" fill="url(#bg)"/>
+  <circle cx="905" cy="65" r="185" fill="#ffffff" opacity=".07"/>
+  <circle cx="55" cy="470" r="225" fill="#291c91" opacity=".22"/>
+  <rect x="72" y="78" width="152" height="152" rx="42" fill="url(#card)" stroke="#ffffff" stroke-opacity=".28"/>
+  <circle cx="148" cy="154" r="43" fill="none" stroke="#ffffff" stroke-width="12"/>
+  <path d="M166 135c-6-7-13-10-22-10-13 0-21 7-21 16 0 11 9 15 23 18 10 2 14 5 14 9 0 6-5 9-13 9-9 0-17-4-23-11M148 116v76" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <text x="270" y="180" fill="#ffffff" font-family="Arial, sans-serif" font-size="62" font-weight="700">FinanceTrack</text>
+  <text x="273" y="229" fill="#ffffff" opacity=".82" font-family="Arial, sans-serif" font-size="25">Keuangan harian lebih terarah</text>
+  <g transform="translate(273 280)" fill="#ffffff" font-family="Arial, sans-serif" font-size="20">
+    <rect width="205" height="54" rx="27" fill="#ffffff" opacity=".13"/>
+    <text x="27" y="35">Catat transaksi</text>
+    <rect x="220" width="174" height="54" rx="27" fill="#ffffff" opacity=".13"/>
+    <text x="247" y="35">Atur anggaran</text>
+    <rect x="409" width="179" height="54" rx="27" fill="#ffffff" opacity=".13"/>
+    <text x="437" y="35">Pantau tujuan</text>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FinanceTrack</string>
+    <string name="title_activity_main">FinanceTrack</string>
+    <string name="package_name">com.financetrack.harian</string>
+    <string name="custom_url_scheme">com.financetrack.harian</string>
+    <string name="widget_description">Saldo FinanceTrack dan tombol tambah transaksi</string>
+</resources>

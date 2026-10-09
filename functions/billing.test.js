@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {hash,normalizePurchase,bestEntitlement} from './billing.js';
+const uid='user-a', now=Date.parse('2026-01-01T00:00:00Z');
+const sub=(state='SUBSCRIPTION_STATE_ACTIVE',expiry='2026-02-01T00:00:00Z')=>({subscriptionState:state,externalAccountIdentifiers:{obfuscatedExternalAccountId:hash(uid)},lineItems:[{productId:'financetrack_premium_monthly',expiryTime:expiry}],acknowledgementState:'ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED'});
+test('active, grace and canceled subscriptions retain paid time',()=>{for(const state of ['SUBSCRIPTION_STATE_ACTIVE','SUBSCRIPTION_STATE_IN_GRACE_PERIOD','SUBSCRIPTION_STATE_CANCELED']) assert.equal(normalizePurchase('financetrack_premium_monthly',sub(state),uid,now).active,true)});
+test('pending, hold, paused and expired do not unlock',()=>{for(const state of ['SUBSCRIPTION_STATE_PENDING','SUBSCRIPTION_STATE_ON_HOLD','SUBSCRIPTION_STATE_PAUSED','SUBSCRIPTION_STATE_EXPIRED']) assert.equal(normalizePurchase('financetrack_premium_monthly',sub(state),uid,now).active,false);assert.equal(normalizePurchase('financetrack_premium_monthly',sub(undefined,'2025-01-01T00:00:00Z'),uid,now).active,false)});
+test('wrong account and unknown product rejected',()=>{assert.throws(()=>normalizePurchase('financetrack_premium_monthly',sub(),'other',now),/account-mismatch/);assert.throws(()=>normalizePurchase('unknown',sub(),uid,now),/unsupported-product/);assert.throws(()=>normalizePurchase('__proto__',sub(),uid,now),/unsupported-product/)});
+test('wrong subscription product cannot unlock',()=>assert.equal(normalizePurchase('financetrack_premium_annual',sub(),uid,now).active,false));
+test('lifetime pending and refunded purchases do not unlock',()=>{for(const purchaseState of [1,2]) assert.equal(normalizePurchase('financetrack_premium_lifetime',{purchaseState,obfuscatedExternalAccountId:hash(uid)},uid,now).active,false)});
+test('lifetime prevails and inactive purchases stay inactive',()=>{assert.deepEqual(bestEntitlement([{active:false}]),{active:false});assert.equal(bestEntitlement([{active:true,plan:'monthly',expiresAt:'2027-01-01'},{active:true,plan:'lifetime',source:'lifetime',expiresAt:null}]).plan,'lifetime')});
